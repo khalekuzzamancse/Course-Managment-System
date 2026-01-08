@@ -2,6 +2,7 @@
 
 package com.kzcse.cms.features.course_list.presentation
 
+import android.R.attr.text
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,41 +23,55 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontVariation.weight
+import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.max
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.kzcse.cms.core.ui.DividerHorizontal
 import com.kzcse.cms.core.ui.LoadingView
 import com.kzcse.cms.core.ui.NoDataView
+import com.kzcse.cms.core.ui.ScreenStrategy
+import com.kzcse.cms.core.ui.SearchBarView
+import com.kzcse.cms.core.ui.SpacerHorizontal
 import com.kzcse.cms.features.course_list.domain.CourseModel
 import com.kzcse.cms.features.course_list.domain.InstructorModel
 
 @Composable
-fun CourseListScreen(modifier: Modifier = Modifier) {
+fun CourseListScreen(
+    modifier: Modifier = Modifier,
+    onDetailsRequest: (String) -> Unit
+) {
     val viewmodel = viewModel { CourseListViewModel() }
-    val courses = viewmodel.courses.collectAsState().value
     val isLoading = viewmodel.isLoading.collectAsState().value
+    val courses = viewmodel.courses.collectAsState().value
     LaunchedEffect(Unit) {
         viewmodel.read()
     }
-    if (isLoading) {
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            LoadingView()
+
+    ScreenStrategy(
+        controller = viewmodel,
+        title = {
+            Text("Courses")
         }
-    } else {
+    ) {
         Column(
             modifier = modifier
         ) {
-            if (courses.isEmpty()) {
+            SearchBarView(
+                modifier = Modifier.padding(horizontal = 8.dp).fillMaxWidth(),
+                onSearch = {viewmodel.search(it ?: "") },
+                searchHint = "Search..."
+            )
+            if (courses.isEmpty() && !isLoading) {
                 NoDataView()
             } else {
                 CourseList(
                     courses = courses,
-                    onCourseClick = {}
+                    onCourseClick = onDetailsRequest
                 )
             }
         }
@@ -111,7 +126,6 @@ private fun _CourseView(
                     style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier.weight(1f)
                 )
-
                 Spacer(modifier = Modifier.width(8.dp))
 
                 Text(
@@ -122,12 +136,29 @@ private fun _CourseView(
 
             Spacer(modifier = Modifier.height(4.dp))
 
-            // Instructor
-            Text(
-                text = model.instructor.name,
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
+            Row (
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ){
+                Text(
+                    text = model.instructor.name,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+                Spacer(Modifier.weight(1f))
+                Text(
+                    modifier = Modifier,
+                    text = if (model.isPremium) {
+                        "$${model.priceUsd}"
+                    } else {
+                        "Free"
+                    },
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
+
 
             Spacer(modifier = Modifier.height(4.dp))
 
@@ -146,25 +177,20 @@ private fun _CourseView(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-
                 Text(
-                    text = if (model.isPremium) {
-                        "$${model.priceUsd}"
-                    } else {
-                        "Free"
-                    },
-                    style = MaterialTheme.typography.bodyMedium
+                    text = "Tags: ${model.tags.joinToString(", ")}",
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    style = MaterialTheme.typography.bodySmall
                 )
-
                 Spacer(modifier = Modifier.weight(1f))
-
-//                if (model.) {
-//                    Text(
-//                        text = "ENROLLED",
-//                        style = MaterialTheme.typography.labelSmall,
-//                        color = MaterialTheme.colorScheme.primary
-//                    )
-//                }
+                if (model.isEnrolled) {
+                    Text(
+                        text = "ENROLLED",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
             }
         }
     }
@@ -211,7 +237,8 @@ private fun Preview() {
         priceUsd = 49.99,
         isPremium = true,
         tags = listOf("Compose", "MVVM", "Coroutines"),
-        rating = 4.8
+        rating = 4.8,
+        isEnrolled = false
     )
     CourseList(
         courses = listOf(model, model, model),

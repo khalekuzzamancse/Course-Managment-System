@@ -9,34 +9,22 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.kzcse.cms.core.data_src.local.RoomDbProvider
+import com.kzcse.cms.features._navigation.NavigationRoot
 import com.kzcse.cms.features.course_list.presentation.CourseListScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
        // enableEdgeToEdge()
+        RoomDbProvider.init(this)
         setContent {
             CourseManagementSystemTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    CourseListScreen(modifier = Modifier.padding(innerPadding))
+                    NavigationRoot(modifier = Modifier.padding(innerPadding))
                 }
             }
         }
     }
 }
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    CourseManagementSystemTheme {
-        Greeting("Android")
-    }
-}

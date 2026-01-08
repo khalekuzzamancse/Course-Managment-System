@@ -17,15 +17,58 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.kzcse.cms.core.ui.BackIcon
+import com.kzcse.cms.core.ui.NoDataView
+import com.kzcse.cms.core.ui.ScreenStrategy
+import com.kzcse.cms.core.ui.VoidCallback
+import com.kzcse.cms.features.course_list.data.CourseDetailsViewModel
 import com.kzcse.cms.features.course_list.domain.CourseModel
 import com.kzcse.cms.features.course_list.domain.InstructorModel
 
 @Composable
-fun CourseDetailsScreen(modifier: Modifier = Modifier) {
+fun CourseDetailsScreen(
+    modifier: Modifier = Modifier,
+    id: String,
+    onBack: VoidCallback
+) {
+    val viewModel = viewModel { CourseDetailsViewModel() }
+    val model = viewModel.course.collectAsState().value
+    val isLoading=viewModel.isLoading.collectAsState().value
+    LaunchedEffect(Unit) {
+        viewModel.read(id)
+    }
+    ScreenStrategy(
+        controller = viewModel,
+        modifier = modifier,
+        navigationIcon = {
+            BackIcon(
+                onClick = onBack
+            )
+        },
+        title = {
+            Text("Details Screen")
+        }
+    ){
+        if (model!=null){
+            _CourseDetailView(
+                model = model,
+                onEnrollClick = {
+                    viewModel.enroll()
+                }
+            )
+        }
+        else{
+            if(!isLoading) NoDataView()
+        }
+
+    }
 
 }
 
@@ -97,7 +140,7 @@ fun _CourseDetailView(
         // Enroll button
         Button(
             onClick = onEnrollClick,
-         //   enabled = !model.isEnrolled,
+           enabled = !model.isEnrolled,
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(
@@ -122,7 +165,8 @@ private fun Preview() {
         priceUsd = 49.99,
         isPremium = true,
         tags = listOf("Compose", "MVVM", "Coroutines"),
-        rating = 4.8
+        rating = 4.8,
+        isEnrolled = false
     )
     _CourseDetailView(
         model = model,

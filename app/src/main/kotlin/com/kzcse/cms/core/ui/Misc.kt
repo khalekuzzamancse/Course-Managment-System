@@ -47,9 +47,9 @@ fun NoDataView(
 
 
 @Composable
-fun LoadingView() {
+fun LoadingView(modifier: Modifier = Modifier) {
     CircularProgressIndicator(
-        modifier = Modifier.size(64.dp),
+        modifier = modifier.size(64.dp),
         strokeWidth = 2.dp,
         strokeCap = StrokeCap.Round,
     )

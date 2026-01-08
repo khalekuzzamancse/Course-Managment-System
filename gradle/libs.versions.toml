@@ -14,6 +14,7 @@ kotlinxSerializationCore = "1.8.1"
 nav3Core = "1.0.0-alpha08"
 nav3Lifecycle = "1.0.0-alpha04"
 materialExtendedIcon="1.5.0"
+ksp = "2.3.4"
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -48,6 +49,7 @@ android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlinSerialization" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 [bundles]
 ktor=["ktor-client-core","ktor-client-okhttp","ktor-client-content-negotiation","ktor-serialization-kotlinx-json"]
 navigation3=["nav3-runtime","nav3-ui","androidx-lifecycle-viewmodel-nav3"]

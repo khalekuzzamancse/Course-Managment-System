@@ -1,9 +1,12 @@
 package com.kzcse.cms.features.course_list.domain
 
+import kotlinx.coroutines.flow.Flow
+
 interface  CourseRepository {
-    suspend fun readOrThrow(): List<CourseModel>
-    suspend fun searchOrThrow(): List<CourseModel>
+    suspend fun readOrThrow(): Flow<List<CourseModel>>
+    suspend fun searchOrThrow(query: String): List<CourseModel>
     suspend fun detailsOrThrow(id: String): CourseModel
+    suspend fun enrollOrThrow(id: String)
 }
 
 data class CourseModel(
@@ -15,7 +18,8 @@ data class CourseModel(
     val priceUsd: Double,
     val isPremium: Boolean,
     val tags: List<String>,
-    val rating: Double
+    val rating: Double,
+    val isEnrolled: Boolean
 )
 
 data class InstructorModel(
