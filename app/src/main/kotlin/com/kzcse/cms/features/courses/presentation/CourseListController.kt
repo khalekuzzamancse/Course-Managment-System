@@ -1,7 +1,7 @@
-package com.kzcse.cms.features.course_list.presentation
+package com.kzcse.cms.features.courses.presentation
 
 import com.kzcse.cms.core.ui.FeedbackController
-import com.kzcse.cms.features.course_list.domain.CourseModel
+import com.kzcse.cms.features.courses.domain.CourseModel
 import kotlinx.coroutines.flow.StateFlow
 
 interface CourseListController: FeedbackController {

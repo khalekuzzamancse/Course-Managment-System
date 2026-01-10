@@ -1,4 +1,4 @@
-package com.kzcse.cms
+package com.kzcse.cms.features._navigation
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme

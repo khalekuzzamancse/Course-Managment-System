@@ -1,6 +1,6 @@
 @file:Suppress("ComposableNaming")
 
-package com.kzcse.cms.features.course_list.presentation
+package com.kzcse.cms.features.courses.presentation
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -23,26 +23,30 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.kzcse.cms.core.ui.BackIcon
 import com.kzcse.cms.core.ui.NoDataView
 import com.kzcse.cms.core.ui.ScreenStrategy
+import com.kzcse.cms.core.ui.SpacerHorizontal
 import com.kzcse.cms.core.ui.VoidCallback
-import com.kzcse.cms.features.course_list.data.CourseDetailsViewModel
-import com.kzcse.cms.features.course_list.domain.CourseModel
-import com.kzcse.cms.features.course_list.domain.InstructorModel
+import com.kzcse.cms.features.courses.presentation.CourseDetailsViewModel
+import com.kzcse.cms.features.courses.domain.CourseModel
+import com.kzcse.cms.features.courses.domain.InstructorModel
 
 @Composable
 fun CourseDetailsScreen(
     modifier: Modifier = Modifier,
     id: String,
+    viewModel: CourseDetailsViewModel= hiltViewModel(),
     onBack: VoidCallback
 ) {
-    val viewModel = viewModel { CourseDetailsViewModel() }
+    //val viewModel = viewModel { CourseDetailsViewModel() }
     val model = viewModel.course.collectAsState().value
     val isLoading=viewModel.isLoading.collectAsState().value
     LaunchedEffect(Unit) {
         viewModel.read(id)
+
     }
     ScreenStrategy(
         controller = viewModel,
@@ -96,7 +100,7 @@ fun _CourseDetailView(
 
         // Instructor
         Text(
-            text = "Instructor: ${model.instructor.name}",
+            text = "Instructor: ${model.instructor.name} [${model.instructor.expertiseLevel}]",
             style = MaterialTheme.typography.bodyMedium
         )
 
@@ -121,7 +125,14 @@ fun _CourseDetailView(
                 text = if (model.isPremium) "$${model.priceUsd}" else "Free",
                 style = MaterialTheme.typography.bodyMedium
             )
+            SpacerHorizontal(16)
+            Text(
+                text = "Duration: ${model.durationWeeks} weeks",
+                style = MaterialTheme.typography.bodyMedium
+            )
         }
+
+
 
         Spacer(modifier = Modifier.height(16.dp))
 

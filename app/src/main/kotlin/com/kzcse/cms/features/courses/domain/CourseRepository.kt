@@ -1,4 +1,4 @@
-package com.kzcse.cms.features.course_list.domain
+package com.kzcse.cms.features.courses.domain
 
 import kotlinx.coroutines.flow.Flow
 

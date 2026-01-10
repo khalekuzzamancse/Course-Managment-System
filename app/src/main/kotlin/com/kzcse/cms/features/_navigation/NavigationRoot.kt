@@ -12,8 +12,8 @@ import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.rememberSavedStateNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import androidx.navigation3.ui.rememberSceneSetupNavEntryDecorator
-import com.kzcse.cms.features.course_list.presentation.CourseDetailsScreen
-import com.kzcse.cms.features.course_list.presentation.CourseListScreen
+import com.kzcse.cms.features.courses.presentation.CourseDetailsScreen
+import com.kzcse.cms.features.courses.presentation.CourseListScreen
 
 @Composable
 fun NavigationRoot(modifier: Modifier = Modifier) {

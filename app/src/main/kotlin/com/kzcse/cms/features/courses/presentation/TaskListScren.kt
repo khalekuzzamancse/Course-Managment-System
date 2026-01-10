@@ -1,10 +1,8 @@
 @file:Suppress("ComposableNaming")
 
-package com.kzcse.cms.features.course_list.presentation
+package com.kzcse.cms.features.courses.presentation
 
-import android.R.attr.text
 import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -23,29 +21,24 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontVariation.weight
-import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.max
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.kzcse.cms.core.ui.DividerHorizontal
-import com.kzcse.cms.core.ui.LoadingView
 import com.kzcse.cms.core.ui.NoDataView
 import com.kzcse.cms.core.ui.ScreenStrategy
 import com.kzcse.cms.core.ui.SearchBarView
-import com.kzcse.cms.core.ui.SpacerHorizontal
-import com.kzcse.cms.features.course_list.domain.CourseModel
-import com.kzcse.cms.features.course_list.domain.InstructorModel
+import com.kzcse.cms.features.courses.domain.CourseModel
+import com.kzcse.cms.features.courses.domain.InstructorModel
 
 @Composable
 fun CourseListScreen(
     modifier: Modifier = Modifier,
+    viewmodel: CourseListViewModel = hiltViewModel(),
     onDetailsRequest: (String) -> Unit
 ) {
-    val viewmodel = viewModel { CourseListViewModel() }
+//    val viewmodel = viewModel { CourseListViewModel() }
     val isLoading = viewmodel.isLoading.collectAsState().value
     val courses = viewmodel.courses.collectAsState().value
     LaunchedEffect(Unit) {
@@ -63,7 +56,7 @@ fun CourseListScreen(
         ) {
             SearchBarView(
                 modifier = Modifier.padding(horizontal = 8.dp).fillMaxWidth(),
-                onSearch = {viewmodel.search(it ?: "") },
+                onSearch = { query-> if(query!=null) viewmodel.search(query)},
                 searchHint = "Search..."
             )
             if (courses.isEmpty() && !isLoading) {

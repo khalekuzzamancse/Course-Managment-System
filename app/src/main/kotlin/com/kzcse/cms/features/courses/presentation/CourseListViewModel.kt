@@ -1,22 +1,41 @@
-package com.kzcse.cms.features.course_list.presentation
+package com.kzcse.cms.features.courses.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kzcse.cms.core.language.Logger
 import com.kzcse.cms.core.ui.FeedbackController
 import com.kzcse.cms.core.ui.FeedbackControllerImpl
-import com.kzcse.cms.features.course_list.data.CourseRepositoryImpl
-import com.kzcse.cms.features.course_list.domain.CourseModel
+import com.kzcse.cms.features._core.MonitorConnectivity
+import com.kzcse.cms.features.courses.domain.CourseModel
+import com.kzcse.cms.features.courses.domain.CourseRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class CourseListViewModel : CourseListController,
+@HiltViewModel
+class CourseListViewModel @Inject constructor(
+    private val repository: CourseRepository
+) : CourseListController,
     FeedbackController by FeedbackControllerImpl(),
     ViewModel() {
     override val courses = MutableStateFlow(listOf<CourseModel>())
-    private val repository = CourseRepositoryImpl()
+    //private val repository = CourseRepositoryImpl()
+    init {
+        viewModelScope.launch(Dispatchers.IO) {
+            MonitorConnectivity.isConnected.collect { available->
+                if (available){
+                    Logger.on("CourseListViewModel","NetworkMonitor","available=$available")
+                   read()
+                }
+
+            }
+
+        }
+    }
 
     fun observe(flow: Flow<List<CourseModel>>) {
         viewModelScope.launch {

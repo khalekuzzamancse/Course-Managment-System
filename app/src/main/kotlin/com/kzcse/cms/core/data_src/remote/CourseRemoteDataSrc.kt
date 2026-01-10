@@ -30,8 +30,8 @@ abstract class CourseRDSTemplate: CourseApi {
     }
     private suspend fun _readOrThrow(method: String, url: String): List<CourseEntity> {
         Logger.on(tag, method, "url", url)
- //       val response: String = client.getOrThrow(url)
-        val response=fakeResponse
+    val response: String = client.getOrThrow(url)
+       // val response=fakeResponse
         Logger.on(tag, method, "response", response)
         return  parseOrThrow(response)
     }

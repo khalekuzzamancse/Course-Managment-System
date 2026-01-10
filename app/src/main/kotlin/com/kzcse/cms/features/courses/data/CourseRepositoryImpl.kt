@@ -1,4 +1,4 @@
-package com.kzcse.cms.features.course_list.data
+package com.kzcse.cms.features.courses.data
 
 import com.kzcse.cms.core.data_src.api.CourseEntity
 import com.kzcse.cms.core.data_src.api.CourseRemoteApiFactory
@@ -6,14 +6,16 @@ import com.kzcse.cms.core.data_src.api.InstructorEntity
 import com.kzcse.cms.core.data_src.local.CourseSchema
 import com.kzcse.cms.core.data_src.local.InstructorSchema
 import com.kzcse.cms.core.data_src.local.RoomDbProvider
+import com.kzcse.cms.core.language.CustomException
 import com.kzcse.cms.core.language.Logger
-import com.kzcse.cms.features.course_list.domain.CourseModel
-import com.kzcse.cms.features.course_list.domain.CourseRepository
-import com.kzcse.cms.features.course_list.domain.InstructorModel
+import com.kzcse.cms.features.courses.domain.CourseModel
+import com.kzcse.cms.features.courses.domain.CourseRepository
+import com.kzcse.cms.features.courses.domain.InstructorModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import javax.inject.Inject
 
-class CourseRepositoryImpl : CourseRepository {
+class CourseRepositoryImpl @Inject constructor() : CourseRepository {
     private val api = CourseRemoteApiFactory.createApi()
     private val localDb = RoomDbProvider.dbOrThrow().courseDao()
     override suspend fun readOrThrow(): Flow<List<CourseModel>> {

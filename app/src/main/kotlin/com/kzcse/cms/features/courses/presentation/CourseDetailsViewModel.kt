@@ -1,17 +1,26 @@
-package com.kzcse.cms.features.course_list.data
+package com.kzcse.cms.features.courses.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kzcse.cms.core.language.Logger
 import com.kzcse.cms.core.ui.FeedbackController
 import com.kzcse.cms.core.ui.FeedbackControllerImpl
-import com.kzcse.cms.features.course_list.domain.CourseModel
+import com.kzcse.cms.features.courses.presentation.CourseDetailsController
+import com.kzcse.cms.features.courses.data.CourseRepositoryImpl
+import com.kzcse.cms.features.courses.domain.CourseModel
+import com.kzcse.cms.features.courses.domain.CourseRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class CourseDetailsViewModel: CourseDetailsController, FeedbackController by FeedbackControllerImpl(),ViewModel() {
-        private val repository=CourseRepositoryImpl()
+@HiltViewModel
+class CourseDetailsViewModel @Inject constructor(
+    private val repository: CourseRepository
+) : CourseDetailsController, FeedbackController by FeedbackControllerImpl(),
+    ViewModel() {
+      //  private val repository= CourseRepositoryImpl()
       override val course= MutableStateFlow<CourseModel?>(null)
     private var id=""
     override fun read(id: String) {
