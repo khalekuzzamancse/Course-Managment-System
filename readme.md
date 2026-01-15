@@ -25,7 +25,7 @@ This project showcases fetching, caching, filtering, and updating course data fr
 
 | Description           | Link                                                               |
 | :-------------------- | :----------------------------------------------------------------- |
-| **Video Preview**     | https://drive.google.com/file/d/1EkjBpYQ1RdOon_j6jhY6EJIFJkIoMTeo/view|
+| **Video Preview**     | https://www.youtube.com/watch?v=sOXpkhi6FCE|
 | **APK Download**      |   https://drive.google.com/file/d/1EkjBpYQ1RdOon_j6jhY6EJIFJkIoMTeo/view?usp=sharing|
 | **GitHub Repository** | https://github.com/khalekuzzamancse/Course-Managment-System   |
 
